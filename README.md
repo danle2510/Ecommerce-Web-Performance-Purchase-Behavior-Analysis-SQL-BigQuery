@@ -159,5 +159,189 @@ ORDER BY p.month;
 <img width="593" height="189" alt="image" src="https://github.com/user-attachments/assets/cd3f0205-6496-4614-9922-0959eb1d04b1" />
 
 
+## 🔍 Query 6: Average number of transactions per purchasing user in July 2017
+
+The goal of this analysis is to measure **how often customers come back to buy again** within the month. A value close to 1 means most buyers purchase only once, while a higher value shows **repeat buying and stronger customer loyalty**. This helps the business judge whether to focus on acquiring new customers or on retention tactics such as promotions, loyalty programs, and follow-up emails.
+
+#### 🚀 Query
+
+```sql
+SELECT
+  FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS month,
+  ROUND(SUM(totals.transactions) / COUNT(DISTINCT fullVisitorId), 2) AS avg_transactions_per_user
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
+  UNNEST(hits) AS hits,
+  UNNEST(hits.product) AS product
+WHERE product.productRevenue IS NOT NULL
+  AND totals.transactions >= 1
+GROUP BY month;
+```
+
+#### 💡 Query Result
+
+<img width="443" height="141" alt="image" src="https://github.com/user-attachments/assets/229b2408-d097-47a9-b672-4848b5dbac97" />
+
+
+## 🔍 Query 7: Revenue contribution by device category (order by ratio DESC)
+
+The goal of this analysis is to understand **which devices customers use when they actually spend money**. Knowing each device's share of total revenue tells the business where to prioritize: if desktop dominates, the desktop checkout must be flawless; if mobile's share is small despite high mobile traffic, the **mobile shopping experience may be losing sales** and needs improvement.
+
+#### 🚀 Query
+
+```sql
+WITH revenue AS (
+  SELECT
+    SUM(product.productRevenue) / 1000000 AS total_revenue
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+  WHERE totals.transactions IS NOT NULL
+    AND product.productRevenue IS NOT NULL
+),
+
+device AS (
+  SELECT
+    device.deviceCategory AS device,
+    SUM(product.productRevenue) / 1000000 AS revenue_by_device
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+  WHERE totals.transactions IS NOT NULL
+    AND product.productRevenue IS NOT NULL
+  GROUP BY device
+)
+
+SELECT
+  d.device,
+  ROUND(d.revenue_by_device, 2) AS revenue_by_device,
+  ROUND(r.total_revenue, 2) AS total_revenue,
+  ROUND(100.0 * d.revenue_by_device / r.total_revenue, 2) AS ratio
+FROM device AS d
+CROSS JOIN revenue AS r
+ORDER BY ratio DESC;
+```
+
+#### 💡 Query Result
+
+<img width="756" height="196" alt="image" src="https://github.com/user-attachments/assets/dbe8062f-51bc-4115-a14d-718404282fa4" />
+
+
+## 🔍 Query 8: Other products purchased by customers who bought "YouTube Men's Vintage Henley" in July 2017
+
+The goal of this analysis is to uncover **which products are frequently bought together**. By looking at what else customers buy alongside a specific product, the business can find natural product pairings and use them for **cross-selling**: "customers also bought" recommendations, product bundles, and targeted promotions that raise average order value.
+
+#### 🚀 Query
+
+```sql
+WITH buyer_list AS (
+  SELECT DISTINCT
+    fullVisitorId
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+  WHERE product.v2ProductName = "YouTube Men's Vintage Henley"
+    AND totals.transactions >= 1
+    AND product.productRevenue IS NOT NULL
+)
+
+SELECT
+  product.v2ProductName AS other_purchased_products,
+  SUM(product.productQuantity) AS quantity
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
+  UNNEST(hits) AS hits,
+  UNNEST(hits.product) AS product
+JOIN buyer_list USING (fullVisitorId)
+WHERE product.v2ProductName != "YouTube Men's Vintage Henley"
+  AND totals.transactions >= 1
+  AND product.productRevenue IS NOT NULL
+GROUP BY other_purchased_products
+ORDER BY quantity DESC;
+```
+
+#### 💡 Query Result
+
+<img width="450" height="646" alt="image" src="https://github.com/user-attachments/assets/b4ca25b4-2974-48ce-a5fa-cc1b30f698eb" />
+
+
+## 🔍 Query 9: Conversion funnel from product view → add to cart → purchase in January, February, and March 2017
+
+The goal of this analysis is to track **how customers move through the buying journey** and where they drop off. By measuring how many product views turn into add-to-carts, and how many turn into purchases, the business can pinpoint the **weakest stage of the funnel**. A low add-to-cart rate suggests problems with product pages, pricing, or product appeal, while a big drop between cart and purchase points to friction at checkout.
+
+#### 🚀 Query
+
+```sql
+WITH product_data AS (
+  SELECT
+    FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS month,
+    COUNT(CASE WHEN hits.eCommerceAction.action_type = '2' THEN product.v2ProductName END) AS num_product_view,
+    COUNT(CASE WHEN hits.eCommerceAction.action_type = '3' THEN product.v2ProductName END) AS num_add_to_cart,
+    COUNT(CASE WHEN hits.eCommerceAction.action_type = '6'
+               AND product.productRevenue IS NOT NULL THEN product.v2ProductName END) AS num_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+  WHERE _table_suffix BETWEEN '20170101' AND '20170331'
+    AND hits.eCommerceAction.action_type IN ('2', '3', '6')
+  GROUP BY month
+)
+
+SELECT
+  month,
+  num_product_view,
+  num_add_to_cart,
+  num_purchase,
+  ROUND(num_add_to_cart / num_product_view * 100, 2) AS add_to_cart_rate,
+  ROUND(num_purchase / num_product_view * 100, 2) AS purchase_rate
+FROM product_data
+ORDER BY month;
+```
+
+> 📝 Action types: `2` = product view, `3` = add to cart, `6` = completed purchase.
+
+#### 💡 Query Result
+
+<img width="888" height="195" alt="image" src="https://github.com/user-attachments/assets/fcf80621-e05a-4598-8428-fd0fba35fb94" />
+
+
+## 🔍 Query 10: Weekly and cumulative revenue from May to July 2017
+
+The goal of this analysis is to track **how revenue builds up week by week** over three months. Weekly revenue shows short-term ups and downs, such as the impact of a promotion or a slow week, while cumulative revenue shows the **overall growth trajectory** and whether the business is on pace to hit its targets. Together, they help the business spot momentum early and react before a slowdown affects monthly or quarterly results.
+
+#### 🚀 Query
+
+```sql
+WITH raw_data AS (
+  -- Revenue by week
+  SELECT
+    FORMAT_DATE('%Y-%W', PARSE_DATE('%Y%m%d', date)) AS week,
+    SUM(product.productRevenue) / 1000000 AS weekly_revenue
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`,
+    UNNEST(hits) AS hits,
+    UNNEST(hits.product) AS product
+  WHERE _table_suffix BETWEEN '0501' AND '0731'
+    AND product.productRevenue IS NOT NULL
+  GROUP BY week
+)
+
+-- Cumulative revenue
+SELECT
+  week,
+  ROUND(weekly_revenue, 2) AS weekly_revenue,
+  ROUND(SUM(weekly_revenue) OVER (
+    ORDER BY week
+    ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+  ), 2) AS cumulative_revenue
+FROM raw_data
+ORDER BY week;
+```
+
+> 📝 `SUM() OVER (ORDER BY week ...)` is a window function that adds each week's revenue to the running total of all previous weeks.
+
+#### 💡 Query Result
+
+<img width="586" height="493" alt="image" src="https://github.com/user-attachments/assets/2e7e8518-4fd4-44c5-970c-bcd52959427a" />
+
+
+
 
 
