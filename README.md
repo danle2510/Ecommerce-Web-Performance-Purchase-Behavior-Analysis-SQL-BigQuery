@@ -67,7 +67,7 @@ It starts with **traffic** (Q1, Q2), measuring how many people visit each month 
 
 ---
 
-## Analysis
+## 🔬 Analysis
 
 
 ### 🔍 Query 1: Calculate total visits, pageviews, and transactions for January, February, and March 2017 (order by month)
