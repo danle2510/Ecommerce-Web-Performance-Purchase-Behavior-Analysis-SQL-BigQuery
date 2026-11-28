@@ -410,6 +410,41 @@ ORDER BY week;
 <img width="586" height="493" alt="image" src="https://github.com/user-attachments/assets/2e7e8518-4fd4-44c5-970c-bcd52959427a" />
 
 
+---
 
+## 📈 Key Insights & Recommendations
+
+### Insights
+
+**1. 🚦 Traffic: volume is concentrated, quality varies widely (Q1, Q2)**
+- Traffic grew through Q1 2017, with March as the strongest month: visits rose **12.4%** vs. February, while transactions jumped **35.5%** (733 → 993).
+- Conversion improved every month, from **1.10%** in January to **1.18%** in February and **1.42%** in March, so traffic quality improved, not just volume.
+- In July 2017, **Google (38,400 visits)** and **Direct (19,891)** brought in the most traffic. Direct visitors were more engaged (**43.3%** bounce rate vs. **51.6%** for Google).
+- Social and video sources bounced the most: **YouTube (66.7%)** and **m.facebook.com (64.3%)**. Smaller referral sources like **mail.google.com (24.8%)** and **reddit.com (28.6%)** brought highly engaged visitors.
+
+**2. 👀 Engagement: browsing more does not mean buying more (Q5, Q6)**
+- Non-purchasers viewed about **3.4×** more pages than purchasers in June and **2.7×** more in July, which suggests many visitors explore the site without finding what they need or without enough reason to buy.
+- Purchaser engagement grew **32%** from June to July (94 → 124 pageviews), and purchasing users made an average of **4.16 transactions** in July, showing strong repeat buying among existing customers.
+
+**3. 🛒 Conversion: Direct and DFA convert best, the funnel is improving (Q4, Q9)**
+- **Direct (2.48%)** and **DFA (2.64%)** convert visitors far better than **Google search (0.92%)**. Google sends almost as many visits as Direct (179,804 vs. 189,447) but generates only about **one-third of the transactions** (1,661 vs. 4,697).
+- The funnel improved every month in Q1 2017: add-to-cart rate rose from **28.5% → 34.3% → 37.3%**, and purchase rate from **8.3% → 9.6% → 12.6%**.
+- The **biggest drop-off is after add to cart**: only about **28–34%** of carted items are purchased, so roughly two in three carts are abandoned.
+
+**4. 💰 Revenue: desktop-driven, led by Direct traffic, with strong late-July momentum (Q3, Q7, Q8, Q10)**
+- **Desktop generated 96.1%** of total revenue ($1.67M of $1.74M), while **mobile contributed only 3.3%** and tablet 0.6%.
+- In June 2017, **Direct traffic generated $97.3K** in revenue, far ahead of DFA ($8.9K), and peaked in week 24 ($30.9K).
+- From May to July 2017, revenue reached **$425.3K**, averaging about **$31.8K per week**. Weekly revenue was volatile ($19.8K–$57.1K), with the **strongest week in week 29 ($57.1K)**. *(Week 31 covers only July 31, so it is excluded from the average.)*
+- Customers who bought the **YouTube Men's Vintage Henley** most often also bought **Google Sunglasses (20 units)**, followed by the Google Women's Vintage Hero Tee (7) and the SPF-15 Lip Balm (6). These are mainly apparel and summer accessories.
+
+### Recommendations
+
+- 🎯 **Optimize Google search traffic:** it brings high volume but converts at under 1%. Review keywords and landing pages so search visitors reach relevant products faster.
+- 📢 **Invest more in high-converting channels:** Direct and DFA show the highest conversion rates; strengthen brand awareness, email, and display campaigns that drive these visits.
+- 📱 **Fix the mobile experience:** mobile brings only 3.3% of revenue. Audit the mobile site and checkout for friction, as it is likely a large missed opportunity.
+- 🛒 **Reduce cart abandonment:** with about two-thirds of carts abandoned, test simpler checkout, clearer shipping costs, and cart-reminder emails.
+- 🧭 **Help browsers become buyers:** non-purchasers view far more pages without buying. Improve search, filters, and product recommendations to shorten the path to purchase.
+- 🛍️ **Bundle frequently bought-together items:** pair apparel with accessories like sunglasses and lip balm in "Complete the look" bundles and summer promotions.
+- 🔁 **Reward repeat customers:** purchasers buy multiple times per month, so a loyalty program or follow-up offers can grow revenue from existing customers.
 
 
