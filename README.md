@@ -1,5 +1,71 @@
 # Ecommerce-Web-Performance-Purchase-Behavior-Analysis-SQL-BigQuery
 
+---
+
+## 📑 Table of Contents
+
+1. [Overview](#-overview)
+2. [Dataset](#-dataset)
+3. [Analysis Framework](#-analysis-framework)
+4. [Analysis](#-analysis)
+5. [Key Insights & Recommendations](#-key-insights--recommendations)
+
+---
+
+## 📌 Overview
+
+This project analyzes the **Google Merchandise Store** e-commerce website using SQL in **Google BigQuery**. The goal is to understand how visitors find the site, how they behave once they arrive, and what drives them to purchase.
+
+The analysis follows the full customer journey, from **traffic → engagement → conversion → revenue**, to help the business answer:
+
+- Which traffic sources bring the most valuable customers?
+- Where do customers drop off before purchasing?
+- Which devices and products drive revenue?
+- How is revenue trending over time?
+
+**Skills demonstrated:** aggregations, `CASE WHEN`, CTEs, `UNNEST` of nested/repeated fields, `JOIN`, `UNION ALL`, window functions, date formatting, wildcard tables with `_table_suffix`.
+
+---
+
+## 🗂️ Dataset
+
+| Item | Detail |
+|---|---|
+| **Source** | `bigquery-public-data.google_analytics_sample.ga_sessions_*` |
+| **Business** | Google Merchandise Store (online store selling Google-branded products) |
+| **Time range** | August 2016 – August 2017 |
+| **Granularity** | One row per session, with nested `hits` and `product` arrays |
+
+<details>
+<summary><b>Key fields used</b></summary>
+<br/>
+
+| Field | Description |
+|---|---|
+| `fullVisitorId` | Unique visitor ID |
+| `date` | Session date (`YYYYMMDD`) |
+| `totals.visits` | Number of sessions |
+| `totals.pageviews` | Total pageviews in the session |
+| `totals.bounces` | 1 if the session bounced |
+| `totals.transactions` | Number of transactions in the session |
+| `trafficSource.source` | Source of the traffic (google, direct, etc.) |
+| `device.deviceCategory` | Device type (desktop, mobile, tablet) |
+| `hits.eCommerceAction.action_type` | Action type (2 = product view, 3 = add to cart, 6 = purchase) |
+| `hits.product.v2ProductName` | Product name |
+| `hits.product.productQuantity` | Quantity ordered |
+| `hits.product.productRevenue` | Product revenue (× 10⁶) |
+
+</details>
+
+---
+
+## 🧭 Analysis Framework
+
+The analysis follows the **customer journey**, from the moment a visitor arrives on the site to the revenue they generate.
+
+It starts with **traffic** (Q1, Q2), measuring how many people visit each month and whether each source brings in engaged visitors or ones who leave right away. It then looks at **engagement** (Q5, Q6), comparing how buyers and non-buyers browse the site and whether customers come back to purchase again. Next, it examines **conversion** (Q4, Q9), identifying which traffic sources turn visitors into buyers most effectively and where shoppers drop off between viewing a product, adding it to the cart, and checking out. Finally, it focuses on **revenue** (Q3, Q7, Q8, Q10), showing which channels, devices, and product combinations drive sales and how revenue builds up week by week.
+
+---
 
 
 ### 🔍 Query 1: Calculate total visits, pageviews, and transactions for January, February, and March 2017 (order by month)
